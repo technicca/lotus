@@ -1,4 +1,6 @@
 backup/*
 backup2/*
-test/*
+test/orig.cpp
 .vscode
+network
+testm

@@ -1,16 +1,20 @@
 #include <vector>
+#include <memory>
+#include "activation.hpp"
 
 class Neuron {
 public:
-    Neuron(const std::vector<float>& weights, float bias);
-    std::vector<float> getWeights() const;
-    void setWeights(const std::vector<float>& weights);
-    float getBias() const;
-    void setBias(float bias);
-    float sigmoid(float x) const;
-    float calculateOutput(const std::vector<float>& inputs) const;
+    Neuron();
+    Neuron(const std::vector<double>& weights, double bias, std::shared_ptr<ActivationFunction> func);
+    std::vector<double> getWeights() const;
+    void setWeights(const std::vector<double>& weights);
+    double getBias() const;
+    void setBias(double bias);
+    double calculateOutput(const std::vector<double>& inputs) const;
 
 private:
-    std::vector<float> weights;
-    float bias;
+    std::vector<double> weights;
+    double bias;
+    std::shared_ptr<ActivationFunction> activationFunc; // memory management
 };
+

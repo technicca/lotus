@@ -1,15 +1,18 @@
 #include "matrices.hpp"
 #include <random>
 #include <stdexcept>
+#include <ostream>
 
-Matrix::Matrix(int rows, int cols) : data(rows, std::vector<float>(cols)) { // random matrix 
+Matrix::Matrix(int rows, int cols) : data(rows, std::vector<float>(cols)) {
     for(int i=0; i<rows; i++)
         for(int j=0; j<cols; j++)
             data[i][j] = random_float(-1, 1);
-}
+} // random matrix constructor
 
-Matrix::Matrix(std::initializer_list<std::initializer_list<float>> list) // // user-specified matrix
-    : data(list.begin(), list.end()) {}
+Matrix::Matrix(std::initializer_list<std::initializer_list<float>> list)
+    : data(list.begin(), list.end()) {} //  user-specified matrix constructor
+
+Matrix::Matrix(int rows, int cols, float value) : data(rows, std::vector<float>(cols, value)) {} //constant matrix constructor
 
 int Matrix::getNumRows() const {
     return data.size();
@@ -26,36 +29,37 @@ float Matrix::random_float(float min, float max) {
     return dis(e);
 }
 
-Matrix Matrix::multiply(const Matrix& other) {
+Matrix Matrix::multiply(const Matrix& other) const {
     if (data[0].size() != other.data.size()) {
         throw std::invalid_argument("Incompatible matrix dimensions for multiplication");
     }
-    Matrix result(data.size(), other.data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<other.data[0].size(); j++)
-            for(int k=0; k<data[0].size(); k++)
+    Matrix result(data.size(), other.data[0].size(), 0); // Initialize result matrix with zeros
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<other.data[0].size(); j++)
+            for(std::size_t k=0; k<data[0].size(); k++)
                 result.data[i][j] += data[i][k] * other.data[k][j];
     return result;
 }
 
-Matrix Matrix::add(const Matrix& other) {
+
+Matrix Matrix::add(const Matrix& other) const {
     if (data.size() != other.data.size() || data[0].size() != other.data[0].size()) {
         throw std::invalid_argument("Both matrices must be of the same size");
     }
     Matrix result(data.size(), data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<data[0].size(); j++)
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<data[0].size(); j++)
             result.data[i][j] = data[i][j] + other.data[i][j];
     return result;
 }
 
-Matrix Matrix::subtract(const Matrix& other) {
+Matrix Matrix::subtract(const Matrix& other) const {
     if (data.size() != other.data.size() || data[0].size() != other.data[0].size()) {
         throw std::invalid_argument("Both matrices must be of the same size");
     }
     Matrix result(data.size(), data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<data[0].size(); j++)
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<data[0].size(); j++)
             result.data[i][j] = data[i][j] - other.data[i][j];
     return result;
 }
@@ -66,8 +70,8 @@ Matrix Matrix::operator+(const Matrix& other) const {
         throw std::invalid_argument("Both matrices must be of the same size");
     }
     Matrix result(data.size(), data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<data[0].size(); j++)
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<data[0].size(); j++)
             result.data[i][j] = data[i][j] + other.data[i][j];
     return result;
 }
@@ -77,8 +81,8 @@ Matrix Matrix::operator-(const Matrix& other) const {
         throw std::invalid_argument("Both matrices must be of the same size");
     }
     Matrix result(data.size(), data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<data[0].size(); j++)
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<data[0].size(); j++)
             result.data[i][j] = data[i][j] - other.data[i][j];
     return result;
 }
@@ -87,22 +91,23 @@ Matrix Matrix::operator*(const Matrix& other) const {
     if (data[0].size() != other.data.size()) {
         throw std::invalid_argument("Incompatible matrix dimensions for multiplication");
     }
-    Matrix result(data.size(), other.data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<other.data[0].size(); j++)
-            for(int k=0; k<data[0].size(); k++)
+    Matrix result(data.size(), other.data[0].size(), 0);  // Initialize result matrix with zeros
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<other.data[0].size(); j++)
+            for(std::size_t k=0; k<data[0].size(); k++)
                 result.data[i][j] += data[i][k] * other.data[k][j];
     return result;
 }
 
 
-Matrix Matrix::elementwise_multiply(const Matrix& other) {
+
+Matrix Matrix::elementwise_multiply(const Matrix& other) const {
     if (data.size() != other.data.size() || data[0].size() != other.data[0].size()) {
         throw std::invalid_argument("Both matrices must be of the same size");
     }
     Matrix result(data.size(), data[0].size());
-    for(int i=0; i<data.size(); i++)
-        for(int j=0; j<data[0].size(); j++)
+    for(std::size_t i=0; i<data.size(); i++)
+        for(std::size_t j=0; j<data[0].size(); j++)
             result.data[i][j] = data[i][j] * other.data[i][j];
     return result;
 }

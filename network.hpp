@@ -1,13 +1,17 @@
+#pragma once
+
 #include <vector>
 #include "layer.hpp"
 
-class Network {
+class NeuralNetwork {
 public:
-    Network(const std::vector<int>& topology);
-    void feedForward(const std::vector<float>& input);
-    void backPropagate(const std::vector<float>& target);
-    void updateWeights(float eta);
-    std::vector<float> getResults() const;
+    NeuralNetwork(const std::vector<int>& topology, double learningRate);
+    void feedForward(const std::vector<double>& inputValues);
+    void backPropagation(const std::vector<double>& targetValues);
+    void getResults(std::vector<double>& resultValues) const;
+
 private:
     std::vector<Layer> layers;
+    double error;
+    double learningRate;
 };

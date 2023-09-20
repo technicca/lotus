@@ -1,17 +1,28 @@
 #include "layer.hpp"
+#include <cmath>
 #include <random>
+#include <iostream>
+#include <algorithm>
 
-Layer::Layer(int size, int inputs)
-    : neurons(size, Neuron(std::vector<float>(inputs), 0)) { // Initialize neurons with random weights and 0 bias
+Layer::Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc) {
+    initializeNeurons(size, inputs, activationFunc);
 }
 
-void Layer::addNeuron(const Neuron& neuron) {
-    neurons.push_back(neuron);
+void Layer::initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc) {
+    neurons.resize(size);
+    for (Neuron &neuron: neurons) {
+        std::vector<double> weights(inputs);
+        std::generate(weights.begin(), weights.end(), []() { return (static_cast<float>(rand()) / RAND_MAX) * 2 - 1; }); // weights randomly initialized 
+        neuron = Neuron(weights, 0.0, activationFunc);
+    }
 }
 
-std::vector<float> Layer::calculateLayerOutput(const std::vector<float>& inputs) {
-    std::vector<float> output;
-    for (auto& neuron : neurons)
+std::vector<double> Layer::calculateLayerOutput(const std::vector<double>& inputs) {
+    if (!neurons.empty() && inputs.size() != neurons[0].getWeights().size()){
+        throw std::invalid_argument("Size of inputs does not match size of weights");
+    }
+    std::vector<double> output;
+    for(auto& neuron : neurons)
         output.push_back(neuron.calculateOutput(inputs));
     return output;
 }
