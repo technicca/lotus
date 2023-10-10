@@ -1,5 +1,5 @@
-#ifndef MATRICES_H
-#define MATRICES_H
+#ifndef MATRICES_HPP
+#define MATRICES_HPP
 
 #include <vector>
 #include <ostream>
@@ -27,4 +27,4 @@ private:
     float random_float(float min, float max);
 };
 
-#endif
+#endif // MATRICES_HPP

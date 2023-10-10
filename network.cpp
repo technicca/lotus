@@ -1,33 +1,33 @@
 #include "layer.hpp"
+#include "network.hpp"
 #include <vector>
 
-class Network {
-public:
-    Network(double learningRate) : learningRate(learningRate) {}
-    void addLayer(Layer layer) { layers.push_back(layer); }
+Network::Network(double learningRate) : learningRate(learningRate) {}
 
-    // Forward pass
-    std::vector<double> feedForward(const std::vector<double>& inputs) {
-        layerOutputs.clear(); // Clear layerOutputs
-        std::vector<double> layerInputs = inputs;
-        for (Layer& layer : layers) {
-            layerInputs = layer.calculateLayerOutput(layerInputs);
-            layerOutputs.push_back(layerInputs); // Store the outputs of each layer
-        }
-        return layerInputs;
+void Network::addLayer(Layer layer) { 
+    layers.push_back(layer); 
+}
+
+std::vector<double> Network::feedForward(const std::vector<double>& inputs) {
+    layerOutputs.clear(); // Clear layerOutputs
+    std::vector<double> layerInputs = inputs;
+    for (Layer& layer : layers) {
+        layerInputs = layer.calculateLayerOutput(layerInputs);
+        layerOutputs.push_back(layerInputs); // Store the outputs of each layer
     }
+    return layerInputs;
+}
 
-    // Mean squared error
-    double calculateLoss(const std::vector<double>& outputs, const std::vector<double>& targetOutputs) {
-        double totalError = 0.0;
-        for (size_t i = 0; i < outputs.size(); i++) {
-            double error = targetOutputs[i] - outputs[i];
-            totalError += error * error;
-        }
-        return totalError / outputs.size();
+double Network::calculateLoss(const std::vector<double>& outputs, const std::vector<double>& targetOutputs) {
+    double totalError = 0.0;
+    for (size_t i = 0; i < outputs.size(); i++) {
+        double error = targetOutputs[i] - outputs[i];
+        totalError += error * error;
     }
+    return totalError / outputs.size();
+}
 
-    void backpropagate(const std::vector<double>& targetOutputs) {
+void Network::backpropagate(const std::vector<double>& targetOutputs) {
     std::vector<double> errors;
     for (size_t i = 0; i < layers.back().size(); i++) {
         double output = layers.back()[i].getOutput();
@@ -39,8 +39,8 @@ public:
     // Update weights and biases for the output layer
     for (size_t j = 0; j < layers.back().size(); j++) {
         auto& weights = layers.back()[j].getWeightsRef();
-        for (auto& weight : weights) {
-            weight += learningRate * errors[j];
+        for (size_t k = 0; k < weights.size(); k++) {
+            weights[k] += learningRate * errors[j] * layerOutputs[layerOutputs.size() - 2][k];
         }
         layers.back()[j].setBias(layers.back()[j].getBias() + learningRate * errors[j]);
     }
@@ -53,22 +53,15 @@ public:
             for (size_t k = 0; k < layers[i + 1].size(); k++) {
                 error += errors[k] * layers[i + 1][k].getWeights()[j];
             }
+            error *= layers[i][j].getActivationDerivative(layers[i][j].getOutput());
             // Update weights and biases
-            auto& weights = layers[i + 1][j].getWeightsRef();
-            for (auto& weight : weights) {
-                weight += learningRate * error;
+            auto& weights = layers[i][j].getWeightsRef();
+            for (size_t k = 0; k < weights.size(); k++) {
+                weights[k] += learningRate * error * (i > 0 ? layerOutputs[i - 1][k] : layerOutputs[0][k]);
             }
-            layers[i + 1][j].setBias(layers[i + 1][j].getBias() + learningRate * error);
+            layers[i][j].setBias(layers[i][j].getBias() + learningRate * error);
             nextLayerErrors.push_back(error);
         }
         errors = nextLayerErrors;
     }
 }
-
-
-
-private:
-    std::vector<Layer> layers;
-    double learningRate;
-    std::vector<std::vector<double>> layerOutputs;
-};

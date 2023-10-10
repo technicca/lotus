@@ -1,3 +1,6 @@
+#ifndef LAYER_HPP
+#define LAYER_HPP
+
 #include <vector>
 #include <memory>
 #include "neuron.hpp"
@@ -20,3 +23,5 @@ private:
     std::vector<Neuron> neurons; 
     void initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc);
 };
+
+#endif // LAYER_HPP

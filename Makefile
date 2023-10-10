@@ -5,7 +5,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra
 
 # Source files
-SRCS = activation.cpp layer.cpp main.cpp matrices.cpp neuron.cpp
+SRCS = activation.cpp layer.cpp main.cpp matrices.cpp neuron.cpp network.cpp
 
 # Executable name
 EXEC = net
