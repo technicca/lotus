@@ -12,6 +12,13 @@ public:
     double calculateLoss(const std::vector<double>& outputs, const std::vector<double>& targetOutputs);
     void backpropagate(const std::vector<double>& targetOutputs);
 
+    std::vector<Layer>& getLayers() {
+        return layers;
+    }
+
+    const std::vector<Layer>& getLayers() const {
+        return layers;
+    }
 private:
     std::vector<Layer> layers;
     double learningRate;

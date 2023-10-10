@@ -3,3 +3,5 @@ backup2/*
 .vscode
 network
 net
+copy
+output.txt

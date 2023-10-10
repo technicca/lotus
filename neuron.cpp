@@ -1,6 +1,7 @@
 #include <cmath>
 #include "neuron.hpp"
 #include <numeric>
+#include <iostream>
 
 Neuron::Neuron() : bias(0), activationFunc(std::make_shared<Sigmoid>()) {}
 
@@ -42,7 +43,15 @@ double Neuron::calculateOutput(const std::vector<double>& inputs) {
     return output;
 }
 
-
 double Neuron::getOutput() const {
     return output;
+}
+
+// debug
+void Neuron::printWeightsAndBias() const {
+    std::cout << "Weights: ";
+    for (auto weight : weights) {
+        std::cout << weight << " ";
+    }
+    std::cout << "Bias: " << bias << std::endl;
 }

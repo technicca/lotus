@@ -22,6 +22,7 @@ public:
         return activationFunc->derivative(x);
     }
 
+    void printWeightsAndBias() const;
 private:
     std::vector<double> weights;
     double bias;

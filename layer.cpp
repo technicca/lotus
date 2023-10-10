@@ -10,10 +10,14 @@ Layer::Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activatio
 
 void Layer::initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc) {
     neurons.resize(size);
+    std::default_random_engine generator;
+    std::normal_distribution<double> distribution(0.0, sqrt(2.0 / (inputs + size)));
     for (Neuron &neuron: neurons) {
         std::vector<double> weights(inputs);
-        std::generate(weights.begin(), weights.end(), [inputs]() { return ((static_cast<float>(rand()) / RAND_MAX) * 2 - 1) / sqrt(inputs); }); // weights randomly initialized 
-        double bias = (static_cast<float>(rand()) / RAND_MAX) * 2 - 1; // bias randomly initialized
+        for (double &weight : weights) {
+            weight = distribution(generator);
+        }
+        double bias = distribution(generator);
         neuron = Neuron(weights, bias, activationFunc);
     }
 }
