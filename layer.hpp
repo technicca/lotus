@@ -6,9 +6,16 @@
 #include "neuron.hpp"
 #include "activation.hpp"
 
+enum class InitializationType {
+    Random,
+    RandomRange,
+    Zero,
+    Xavier
+};
+
 class Layer {
 public:
-    Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc);
+    Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc, InitializationType initType, double min, double max);
     std::vector<double> calculateLayerOutput(const std::vector<double>& inputs);    
     Neuron& operator[](std::size_t idx) { return neurons[idx]; }
     const Neuron& operator[](std::size_t idx) const { return neurons[idx]; }
@@ -21,7 +28,7 @@ public:
 
 private:
     std::vector<Neuron> neurons; 
-    void initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc);
+    void initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc, InitializationType initType, double min, double max);
 };
 
 #endif // LAYER_HPP

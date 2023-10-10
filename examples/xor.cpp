@@ -1,17 +1,18 @@
 #include "network.hpp"
 #include "layer.hpp"
 #include "activation.hpp"
+#include "utils/activation_factory.hpp"
 #include <iostream>
 #include <ctime>
 
 int main() {
     srand(time(0));
-    Network network(0.71); // Initialize network with a learning rate
+    Network network(0.3); // Initialize network with a learning rate
 
     // Add layers
-    network.addLayer(Layer(2, 2, std::make_shared<Tanh>())); // Input layer
-    network.addLayer(Layer(2, 2, std::make_shared<Tanh>())); // Hidden layer
-    network.addLayer(Layer(1, 2, std::make_shared<Sigmoid>())); // Output layer
+    network.addLayer(Layer(2, 2, use_tanh(), InitializationType::Xavier, -1.0, 1.0));
+    network.addLayer(Layer(2, 2, use_tanh(), InitializationType::Xavier, -1.0, 1.0)); // Hidden layer
+    network.addLayer(Layer(1, 2, use_sigmoid(), InitializationType::Xavier, -1.0, 1.0)); // Output layer
 
 
     // XOR dataset
