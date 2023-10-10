@@ -12,10 +12,12 @@ void Layer::initializeNeurons(int size, int inputs, std::shared_ptr<ActivationFu
     neurons.resize(size);
     for (Neuron &neuron: neurons) {
         std::vector<double> weights(inputs);
-        std::generate(weights.begin(), weights.end(), []() { return (static_cast<float>(rand()) / RAND_MAX) * 2 - 1; }); // weights randomly initialized 
-        neuron = Neuron(weights, 0.0, activationFunc);
+        std::generate(weights.begin(), weights.end(), [inputs]() { return ((static_cast<float>(rand()) / RAND_MAX) * 2 - 1) / sqrt(inputs); }); // weights randomly initialized 
+        double bias = (static_cast<float>(rand()) / RAND_MAX) * 2 - 1; // bias randomly initialized
+        neuron = Neuron(weights, bias, activationFunc);
     }
 }
+
 
 std::vector<double> Layer::calculateLayerOutput(const std::vector<double>& inputs) {
     if (!neurons.empty() && inputs.size() != neurons[0].getWeights().size()){

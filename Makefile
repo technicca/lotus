@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra
 SRCS = activation.cpp layer.cpp main.cpp matrices.cpp neuron.cpp
 
 # Executable name
-EXEC = network
+EXEC = net
 
 all: $(EXEC)
 

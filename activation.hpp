@@ -5,16 +5,20 @@ class ActivationFunction {
 public:
     virtual ~ActivationFunction() = default;
     virtual double apply(double x) const = 0;
+    virtual double derivative(double x) const = 0;
 };
+
 
 class Sigmoid : public ActivationFunction {
 public:
     double apply(double x) const override;
+    double derivative(double x) const override;
 };
 
 class Tanh : public ActivationFunction {
 public:
     double apply(double x) const override;
+    double derivative(double x) const override;
 };
 
 class Relu : public ActivationFunction {
