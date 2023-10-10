@@ -8,14 +8,15 @@
 
 enum class InitializationType {
     Random,
-    RandomRange,
     Zero,
-    Xavier
+    Xavier,
+    HeUniform,
+    HeNormal
 };
 
 class Layer {
 public:
-    Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc, InitializationType initType, double min, double max);
+    Layer(int size, int inputs, std::shared_ptr<ActivationFunction> activationFunc, InitializationType initType, double min = -0.5, double max = 0.5);
     std::vector<double> calculateLayerOutput(const std::vector<double>& inputs);    
     Neuron& operator[](std::size_t idx) { return neurons[idx]; }
     const Neuron& operator[](std::size_t idx) const { return neurons[idx]; }

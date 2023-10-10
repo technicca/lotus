@@ -1,6 +1,7 @@
 #include "network.hpp"
 #include "layer.hpp"
 #include "activation.hpp"
+#include "utils/track_memory.hpp"
 #include "utils/activation_factory.hpp"
 #include <iostream>
 #include <ctime>
@@ -23,6 +24,7 @@ int main() {
     for (int epoch = 0; epoch < 1000; epoch++) { // set the # of epochs
         double totalLoss = 0.0;
         for (size_t i = 0; i < inputs.size(); i++) {
+            printMemoryUsage();
             auto output = network.feedForward(inputs[i]);
             totalLoss += network.calculateLoss(output, outputs[i]);
             network.backpropagate(outputs[i]);
